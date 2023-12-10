@@ -43,8 +43,16 @@ const AvailableMeasls = () => {
 
   return (
     <section className={AvailableMeaslsStyles.meals}>
-      {isLoading && !error && <h2>Loading...</h2>}
-      {!isLoading && error && <h2>Try again later!</h2>}
+      {isLoading && !error && (
+        <div className="spinner-border text-danger" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
+      {!isLoading && error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
       {!isLoading && !error && (
         <Card>
           <ul>{mealsList}</ul>
