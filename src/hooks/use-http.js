@@ -16,17 +16,12 @@ const useHttp = () => {
       });
 
       if (!response.ok) {
-        // Error status code reported back by the server
         throw new Error("Request failed!");
-        // If an error thrown, line after here won't execute
-        // Request failed string will go to the constructor
-        // That string will be stored in message property of the created error object
       }
 
       const data = await response.json();
       applyData(data);
     } catch (err) {
-      // Thrown error will be catch from here
       setError(err.message);
     }
     setIsLoading(false);
