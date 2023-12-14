@@ -13,7 +13,7 @@ const inputStateReducer = (state, action) => {
     return { value: state.value, isTouched: true };
   }
   if (action.type === "RESET") {
-    return { value: "", value: false };
+    return { value: "", isTouched: false };
   }
   return initialInputState;
 };
@@ -25,7 +25,7 @@ const useInput = (validateValue) => {
   );
 
   const valueIsValid = validateValue(inputState.value);
-  const hasError = !valueIsValid && isTouched;
+  const hasError = !valueIsValid && inputState.isTouched;
 
   const valueChangeHandler = (e) => {
     dispatch({ type: "INPUT", value: e.target.value });
