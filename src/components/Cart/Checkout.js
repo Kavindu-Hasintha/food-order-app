@@ -2,6 +2,7 @@ import useInput from "../../hooks/use-input";
 import classes from "./Checkout.module.css";
 
 const isNotEmpty = (value) => value.trim() !== "";
+const isNotFiveChars = (value) => value.trim().length === 5;
 
 const Checkout = (props) => {
   const {
@@ -27,7 +28,7 @@ const Checkout = (props) => {
     valueChangeHandler: postalCodeChangeHandler,
     inputBlurHandler: postalCodeBlurHandler,
     reset: resetPostalCodeInput,
-  } = useInput(isNotEmpty);
+  } = useInput(isNotFiveChars);
   const {
     value: enteredCity,
     isValid: enteredCityIsValid,
@@ -88,7 +89,7 @@ const Checkout = (props) => {
     : classes.control;
 
   return (
-    <form onSubmit={confirmHandler}>
+    <form className={classes.form} onSubmit={confirmHandler}>
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
@@ -120,7 +121,9 @@ const Checkout = (props) => {
           onBlur={postalCodeBlurHandler}
           value={enteredPostalCode}
         />
-        {enteredPostalCodeHasError && <p>Please enter valid postal code</p>}
+        {enteredPostalCodeHasError && (
+          <p>Please enter valid postal code (5 characters long)</p>
+        )}
       </div>
       <div className={cityInputClasses}>
         <label htmlFor="city">City</label>
@@ -133,12 +136,14 @@ const Checkout = (props) => {
         />
         {enteredCityHasError && <p>Please enter valid city</p>}
       </div>
-      <button type="button" onClick={props.onCancel}>
-        Cancel
-      </button>
-      <button className={classes.actions} type="submit" disabled={!formIsValid}>
-        Confirm
-      </button>
+      <div className={classes.actions}>
+        <button type="button" onClick={props.onCancel}>
+          Cancel
+        </button>
+        <button className={classes.submit} disabled={!formIsValid}>
+          Confirm
+        </button>
+      </div>
     </form>
   );
 };

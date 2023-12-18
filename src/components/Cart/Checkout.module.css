@@ -1,7 +1,7 @@
 .form {
   margin: 1rem 0;
   height: 19rem;
-  overflow: auto;
+  overflow: scroll;
 }
 
 .control {
@@ -20,6 +20,7 @@
   border-radius: 4px;
   width: 20rem;
   max-width: 100%;
+  margin-left: 2px;
 }
 
 .actions {
@@ -56,9 +57,17 @@
 
 .invalid label {
   color: #ca3e51;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
 }
 
 .invalid input {
   border-color: #aa0b20;
   background-color: #ffeff1;
+  font: inherit;
+  border-radius: 4px;
+  width: 20rem;
+  max-width: 100%;
+  margin-left: 2px;
 }
