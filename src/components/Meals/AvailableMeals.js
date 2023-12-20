@@ -1,30 +1,37 @@
+import { useEffect, useState } from "react";
 import Card from "../UI/Card";
 import AvailableMeaslsStyles from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
-
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "eee",
-    description: "Chicken",
-    price: 49.99,
-  },
-  {
-    id: "m3",
-    name: "aaaaaa",
-    description: "fish",
-    price: 14.99,
-  },
-];
+import useHttp from "../../hooks/use-http";
 
 const AvailableMeasls = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+  const [meals, setMeals] = useState([]);
+  const { isLoading, error, sendRequest: fetchMeals } = useHttp();
+
+  useEffect(() => {
+    const transformMeals = (mealsObj) => {
+      const loadedMeals = [];
+
+      for (const mealId in mealsObj) {
+        loadedMeals.push({
+          id: mealId,
+          name: mealsObj[mealId].name,
+          description: mealsObj[mealId].description,
+          price: mealsObj[mealId].price,
+        });
+      }
+      setMeals(loadedMeals);
+    };
+
+    fetchMeals(
+      {
+        url: "https://food-order-app-b04fc-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json",
+      },
+      transformMeals
+    );
+  }, [fetchMeals]);
+
+  const mealsList = meals.map((meal) => (
     <MealItem
       key={meal.id}
       id={meal.id}
@@ -36,9 +43,21 @@ const AvailableMeasls = () => {
 
   return (
     <section className={AvailableMeaslsStyles.meals}>
-      <Card>
-        <ul>{mealsList}</ul>
-      </Card>
+      {isLoading && !error && (
+        <div className="spinner-border text-danger" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
+      {!isLoading && error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+      {!isLoading && !error && (
+        <Card>
+          <ul>{mealsList}</ul>
+        </Card>
+      )}
     </section>
   );
 };
