@@ -61,15 +61,17 @@ const Checkout = (props) => {
       return;
     }
 
-    console.log("Name: " + enteredName);
-    console.log("Street: " + enteredStreet);
-    console.log("Postal Code: " + enteredPostalCode);
-    console.log("City: " + enteredCity);
-
     resetNameInput();
     resetStreetInput();
     resetPostalCodeInput();
     resetCityInput();
+
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
   };
 
   const nameInputClasses = enteredNameHasError
