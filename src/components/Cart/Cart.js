@@ -7,6 +7,8 @@ import Checkout from "./Checkout";
 
 function Cart(props) {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -24,8 +26,9 @@ function Cart(props) {
     setIsCheckout(true);
   };
 
-  const submitOrderHandler = (userData) => {
-    fetch(
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
+    await fetch(
       "https://food-order-app-b04fc-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json",
       {
         method: "POST",
@@ -35,6 +38,8 @@ function Cart(props) {
         }),
       }
     );
+    setIsSubmitting(false);
+    setDidSubmit(true);
   };
 
   const cartItems = (
@@ -65,8 +70,9 @@ function Cart(props) {
     </div>
   );
 
-  return (
-    <Modal onClose={props.onClose}>
+  const cartModelContent = (
+    <React.Fragment>
+      {" "}
       {cartItems}
       <div className={CartStyles.total}>
         <span>Total Amount</span>
@@ -76,6 +82,27 @@ function Cart(props) {
         <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />
       )}
       {!isCheckout && modelActions}
+    </React.Fragment>
+  );
+
+  const isSubmittingModelContent = <p>Sending order data...</p>;
+
+  const didSubmittingModelContent = (
+    <React.Fragment>
+      <p>Successfully send the order!</p>
+      <div className={CartStyles.actions}>
+        <button className={CartStyles.button} onClick={props.onClose}>
+          Close
+        </button>
+      </div>
+    </React.Fragment>
+  );
+
+  return (
+    <Modal onClose={props.onClose}>
+      {!isSubmitting && !didSubmit && cartModelContent}
+      {isSubmitting && !didSubmit && isSubmittingModelContent}
+      {!isSubmitting && didSubmit && didSubmittingModelContent}
     </Modal>
   );
 }
